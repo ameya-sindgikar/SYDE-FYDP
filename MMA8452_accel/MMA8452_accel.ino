@@ -38,6 +38,8 @@ Distributed as-is; no warranty is given.
 //  here on out.
 MMA8452Q accel;
 
+const float alpha = 0.5; //smoothing factor used in the low-pass filter
+
 // The setup function simply starts serial and initializes the
 //  accelerometer.
 void setup()
@@ -122,6 +124,24 @@ void printCalculatedAccels()
   Serial.print("\t");
   Serial.print(accel.cz, 3);
   Serial.print("\t");
+}
+
+//Function to calculate pitch from the calculated acceleration values
+void printCalculatedPitch() {
+  double pitch = 0;
+  //fXg, fYg, fZg are filitered acceleration values
+  double fXg = 0;
+  double fYg = 0;
+  double fZg = 0;
+
+  //low-pass filter
+  fXg = (accel.cx)*alpha + (fXg*(1.0-alpha));
+  fYg = (accel.cy)*alpha + (fYg*(1.0-alpha));
+  fZg = (accel.cz)*alpha + (fZg*(1.0-alpha));
+
+  //calculate pitch
+  pitch = (atan2(fXg,sqrt(fYg*fYg + fZg*fZg))*180.0)/M_PI;
+  Serial.print(pitch);
 }
 
 // This function demonstrates how to use the accel.readPL()
