@@ -93,7 +93,8 @@ void loop()
     //  of the MMA8452Q. Check out this function declaration for
     //  an example of how to use that.
     printOrientation();
-    printCalculatedPitchAndRoll();
+    calculatePitch();
+    calculateRoll();
     
     Serial.println(); // Print new line every time.
   }
@@ -127,10 +128,9 @@ void printCalculatedAccels()
   Serial.print("\t");
 }
 
-//Function to calculate pitch from the calculated acceleration values
-void printCalculatedPitchAndRoll() {
+//Function to calculate pitch
+void calculatePitch(){
   double pitch = 0;
-  double roll = 0;
   //fXg, fYg, fZg are filtered acceleration values
   double fXg = 0;
   double fYg = 0;
@@ -142,10 +142,26 @@ void printCalculatedPitchAndRoll() {
   fZg = (accel.cz)*alpha + (fZg*(1.0-alpha));
 
   //calculate pitch
-  roll = (atan2(-fYg, fZg)*180.0)/M_PI;
   pitch = (atan2(fXg,sqrt(fYg*fYg + fZg*fZg))*180.0)/M_PI;
   Serial.print(" Pitch: ");
   Serial.print(pitch);
+}
+
+//Function to calculate roll
+void calculateRoll(){
+  double roll = 0;
+  //fXg, fYg, fZg are filtered acceleration values
+  double fXg = 0;
+  double fYg = 0;
+  double fZg = 0;
+
+  //low-pass filter
+  fXg = (accel.cx)*alpha + (fXg*(1.0-alpha));
+  fYg = (accel.cy)*alpha + (fYg*(1.0-alpha));
+  fZg = (accel.cz)*alpha + (fZg*(1.0-alpha));
+
+  //calculate roll
+  roll = (atan2(-fYg, fZg)*180.0)/M_PI;
   Serial.print(" Roll: ");
   Serial.print(roll);
 }
