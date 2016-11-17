@@ -93,7 +93,7 @@ void loop()
     //  of the MMA8452Q. Check out this function declaration for
     //  an example of how to use that.
     printOrientation();
-    printCalculatedPitch();
+    printCalculatedPitchAndRoll();
     
     Serial.println(); // Print new line every time.
   }
@@ -128,8 +128,9 @@ void printCalculatedAccels()
 }
 
 //Function to calculate pitch from the calculated acceleration values
-void printCalculatedPitch() {
+void printCalculatedPitchAndRoll() {
   double pitch = 0;
+  double roll = 0;
   //fXg, fYg, fZg are filtered acceleration values
   double fXg = 0;
   double fYg = 0;
@@ -141,9 +142,12 @@ void printCalculatedPitch() {
   fZg = (accel.cz)*alpha + (fZg*(1.0-alpha));
 
   //calculate pitch
+  roll = (atan2(-fYg, fZg)*180.0)/M_PI;
   pitch = (atan2(fXg,sqrt(fYg*fYg + fZg*fZg))*180.0)/M_PI;
   Serial.print(" Pitch: ");
   Serial.print(pitch);
+  Serial.print(" Roll: ");
+  Serial.print(roll);
 }
 
 // This function demonstrates how to use the accel.readPL()
