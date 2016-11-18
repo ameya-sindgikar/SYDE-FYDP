@@ -1,8 +1,6 @@
 import processing.serial.*;
 
 Serial myPort;  // Create object from Serial class
-int val; // Data received from the serial port
-
 static final int WIDTH = 800;
 static final int HEIGHT = 600;
 
@@ -25,7 +23,10 @@ void setup()
   
   size(800, 600);
   
+  noSmooth();
+  
   String portName = Serial.list()[0]; //COM3 for my PC, different for Macs
+  println(portName);
   myPort = new Serial(this, portName, 9600);
 }
 
@@ -62,12 +63,17 @@ void serialEvent (Serial serialData){
   String data = serialData.readStringUntil('\n'); //get line of data
   
   if (data!=null){
+    println("GETTING DATA FROM COM3");
     String[] tokenizedData = splitTokens(data);
     if (tokenizedData.length==3){
-      x = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[0]);
-      y = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[1]);
-      z = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[2]);
+      x = HEIGHT/2 - HEIGHT/4 * int(tokenizedData[0]);
+      println(x);
+      y = HEIGHT/2 - HEIGHT/4 * int(tokenizedData[1]);
+      println(y);
+      z = HEIGHT/2 - HEIGHT/4 * int(tokenizedData[2]);
+      println(z);
       t = HEIGHT/2 - HEIGHT/4 * sqrt(float(tokenizedData[0])*float(tokenizedData[0]) + float(tokenizedData[1])*float(tokenizedData[1]) + float(tokenizedData[2])*float(tokenizedData[2]));
+      println(t);
       redraw();
     }
   }
