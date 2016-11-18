@@ -31,6 +31,7 @@ void setup()
 
 void draw()
 {
+  //shift data
   for (int i=0; i<WIDTH-1; i++){
     ValX[i] = ValX[i+1];
     ValY[i] = ValY[i+1];
@@ -44,6 +45,7 @@ void draw()
   
   background(0); //clears screen
   
+  //plot
   for (int j=0; j<WIDTH-1; j++){
     stroke(255, 0, 0);
     line (j, ValX[j], j+1, ValX[j+1]);
@@ -56,9 +58,19 @@ void draw()
   }
 }
 
-void serialEvent (Serial myPort){
-  //do stuff with the data here
-  //update x, y, z, t
+void serialEvent (Serial serialData){
+  String data = serialData.readStringUntil('\n'); //get line of data
+  
+  if (data!=null){
+    String[] tokenizedData = splitTokens(data);
+    if (tokenizedData.length==3){
+      x = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[0]);
+      y = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[1]);
+      z = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[2]);
+      t = HEIGHT/2 - HEIGHT/4 * sqrt(float(tokenizedData[0])*float(tokenizedData[0]) + float(tokenizedData[1])*float(tokenizedData[1]) + float(tokenizedData[2])*float(tokenizedData[2]));
+      redraw();
+    }
+  }
 }
 
 
