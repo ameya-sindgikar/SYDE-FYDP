@@ -6,30 +6,59 @@ int val; // Data received from the serial port
 static final int WIDTH = 800;
 static final int HEIGHT = 600;
 
+int[] ValX = new int [WIDTH];
+int[] ValY = new int [WIDTH];
+int[] ValZ = new int [WIDTH];
+int[] ValT = new int [WIDTH];
+
+float x;
+float y;
+float z;
+float t;
+
 void setup() 
 {
-  size(200, 200);
-  // I know that the first port in the serial list on my mac
-  // is always my  FTDI adaptor, so I open Serial.list()[0].
-  // On Windows machines, this generally opens COM1.
-  // Open whatever port is the one you're using.
-  String portName = Serial.list()[0];
+  x = 0;
+  y = 0;
+  z = 0;
+  t = 0;
+  
+  size(800, 600);
+  
+  String portName = Serial.list()[0]; //COM3 for my PC, different for Macs
   myPort = new Serial(this, portName, 9600);
 }
 
 void draw()
 {
-  if ( myPort.available() > 0) {  // If data is available,
-    val = myPort.read();         // read it and store it in val
+  for (int i=0; i<WIDTH-1; i++){
+    ValX[i] = ValX[i+1];
+    ValY[i] = ValY[i+1];
+    ValZ[i] = ValZ[i+1];
+    ValT[i] = ValT[i+1];
+    ValX[WIDTH-1] = int(x);
+    ValY[WIDTH-1] = int(y);
+    ValZ[WIDTH-1] = int(z);
+    ValT[WIDTH-1] = int(t);
   }
-  background(255);             // Set background to white
-  if (val == 0) {              // If the serial value is 0,
-    fill(0);                   // set fill to black
-  } 
-  else {                       // If the serial value is not 0,
-    fill(204);                 // set fill to light gray
+  
+  background(0); //clears screen
+  
+  for (int j=0; j<WIDTH-1; j++){
+    stroke(255, 0, 0);
+    line (j, ValX[j], j+1, ValX[j+1]);
+    stroke(0, 255, 0);
+    line (j, ValY[j], j+1, ValY[j+1]);
+    stroke(0, 0, 255);
+    line (j, ValZ[j], j+1, ValZ[j+1]);
+    stroke(255, 255, 255);
+    line (j, ValT[j], j+1, ValT[j+1]);
   }
-  rect(50, 50, 100, 100);
+}
+
+void serialEvent (Serial myPort){
+  //do stuff with the data here
+  //update x, y, z, t
 }
 
 
