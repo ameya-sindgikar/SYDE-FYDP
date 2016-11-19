@@ -150,7 +150,7 @@ void serialEvent (Serial serialData){
       t = HEIGHT/2 - HEIGHT/4 * sqrt(float(tokenizedData[0])*float(tokenizedData[0]) + float(tokenizedData[1])*float(tokenizedData[1]) + float(tokenizedData[2])*float(tokenizedData[2]));
       println(t);
       pitch = calculatePitch();
-      
+      roll = calculateRoll();
       redraw();
     }
   }
@@ -171,5 +171,20 @@ float calculatePitch(){
   println(pitch);
   
   return pitch;
+}
+
+float calculateRoll(){
+  float fYg = 0;
+  float fZg = 0;
+
+  //low-pass filter
+  fYg = (y)*alpha + (fYg*(1.0-alpha));
+  fZg = (z)*alpha + (fZg*(1.0-alpha));
+  
+  roll = (atan2(-fYg, fZg)*180.0)/PI;
+  println(" Roll: ");
+  println(roll);
+  
+  return roll;
 }
   
