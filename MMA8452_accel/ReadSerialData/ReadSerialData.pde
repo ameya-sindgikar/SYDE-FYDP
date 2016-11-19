@@ -65,12 +65,14 @@ void serialEvent (Serial serialData){
   if (data!=null){
     println("GETTING DATA FROM COM3");
     String[] tokenizedData = splitTokens(data);
-    if (tokenizedData.length==3){
-      x = HEIGHT/2 - HEIGHT/4 * int(tokenizedData[0]);
+    println(tokenizedData.length);
+    if (tokenizedData.length>=3){
+      println("size=3");
+      x = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[0]);
       println(x);
-      y = HEIGHT/2 - HEIGHT/4 * int(tokenizedData[1]);
+      y = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[1]);
       println(y);
-      z = HEIGHT/2 - HEIGHT/4 * int(tokenizedData[2]);
+      z = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[2]);
       println(z);
       t = HEIGHT/2 - HEIGHT/4 * sqrt(float(tokenizedData[0])*float(tokenizedData[0]) + float(tokenizedData[1])*float(tokenizedData[1]) + float(tokenizedData[2])*float(tokenizedData[2]));
       println(t);
