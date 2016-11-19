@@ -29,7 +29,7 @@ void setup()
   pitch = 0;
   roll = 0;
   
-  size(800, 600);
+  size(800, 600, P3D);
   
   noSmooth();
   
@@ -69,6 +69,68 @@ void draw()
     stroke(255, 255, 0);
     line (j, ValPitch[j], j+1, ValPitch[j+1]);
   }
+}
+
+void drawOrientation() 
+{
+  //Set background
+  background(0.5);
+
+  pushMatrix(); 
+  
+  translate(width/2, height/2, -30); 
+
+  //Rotate
+  rotateX(pitch*PI/180.0); 
+  rotateZ(roll*PI/180.0); 
+
+  //Print data
+  print("Pitch: ");
+  print(pitch);
+  print(", Roll: ");
+  println(roll);
+
+  
+  scale(90);
+  beginShape(QUADS);
+
+  fill(0, 255, 0); vertex(-1,  1,  1);
+  fill(0, 255, 0); vertex( 1,  1,  1);
+  fill(0, 255, 0); vertex( 1, -1,  1);
+  fill(0, 255, 0); vertex(-1, -1,  1);
+
+  fill(0, 255, 255); vertex( 1,  1,  1);
+  fill(0, 255, 255); vertex( 1,  1, -1);
+  fill(0, 255, 255); vertex( 1, -1, -1);
+  fill(0, 255, 255); vertex( 1, -1,  1);
+
+
+  fill(255, 0, 255); vertex( 1,  1, -1);
+  fill(255, 0, 255); vertex(-1,  1, -1);
+  fill(255, 0, 255); vertex(-1, -1, -1);
+  fill(255, 0, 255); vertex( 1, -1, -1);
+
+  fill(255, 255, 0); vertex(-1,  1, -1);
+  fill(255, 255, 0); vertex(-1,  1,  1);
+  fill(255, 255, 0); vertex(-1, -1,  1);
+  fill(255, 255, 0); vertex(-1, -1, -1);
+
+
+  fill(255, 0, 0); vertex(-1,  1, -1);
+  fill(255, 0, 0); vertex( 1,  1, -1);
+  fill(255, 0, 0); vertex( 1,  1,  1);
+  fill(255, 0, 0); vertex(-1,  1,  1);
+
+
+  fill(0, 0, 255); vertex(-1, -1, -1);
+  fill(0, 0, 255); vertex( 1, -1, -1);
+  fill(0, 0, 255); vertex( 1, -1,  1);
+  fill(0, 0, 255); vertex(-1, -1,  1);
+
+
+  endShape();
+
+  popMatrix(); 
 }
 
 void serialEvent (Serial serialData){
