@@ -10,6 +10,11 @@ int[] ValZ = new int [WIDTH];
 int[] ValT = new int [WIDTH];
 int[] ValPitch = new int [WIDTH];
 
+float scaledX;
+float scaledY;
+float scaledZ;
+float scaledT;
+
 float x;
 float y;
 float z;
@@ -26,8 +31,14 @@ void setup()
   y = 0;
   z = 0;
   t = 0;
+  
   pitch = 0;
   roll = 0;
+  
+  scaledX = 0;
+  scaledY = 0;
+  scaledZ = 0;
+  scaledT = 0;
   
   size(800, 600, P3D);
   
@@ -47,10 +58,10 @@ void draw()
     ValZ[i] = ValZ[i+1];
     ValT[i] = ValT[i+1];
     ValPitch[i] = ValPitch[i+1];
-    ValX[WIDTH-1] = int(x);
-    ValY[WIDTH-1] = int(y);
-    ValZ[WIDTH-1] = int(z);
-    ValT[WIDTH-1] = int(t);
+    ValX[WIDTH-1] = int(scaledX);
+    ValY[WIDTH-1] = int(scaledY);
+    ValZ[WIDTH-1] = int(scaledZ);
+    ValT[WIDTH-1] = int(scaledT);
     ValPitch[WIDTH-1] = int(pitch);
   }
   
@@ -140,15 +151,33 @@ void serialEvent (Serial serialData){
     println("GETTING DATA FROM COM3");
     String[] tokenizedData = splitTokens(data);
     println(tokenizedData.length);
+    println("---begin loop---");
+    for (int j=0; j<tokenizedData.length; j++){
+      float var = float(tokenizedData[j]);
+      println(var);
+    }
+    println("---end loop---");
     if (tokenizedData.length>=3){
-      x = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[0]);
+      
+      println("--Original data--");
+      x = float(tokenizedData[0]);
       println(x);
-      y = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[1]);
+      y = float(tokenizedData[1]);
       println(y);
-      z = HEIGHT/2 - HEIGHT/4 * float(tokenizedData[2]);
+      z = float(tokenizedData[2]);
       println(z);
-      t = HEIGHT/2 - HEIGHT/4 * sqrt(float(tokenizedData[0])*float(tokenizedData[0]) + float(tokenizedData[1])*float(tokenizedData[1]) + float(tokenizedData[2])*float(tokenizedData[2]));
+      t = sqrt(x*x + y*y + z*z);
       println(t);
+      
+      println("--Scaled data--");
+      scaledX = HEIGHT/2 - HEIGHT/4 * x;
+      println(scaledX);
+      scaledY = HEIGHT/2 - HEIGHT/4 * y;
+      println(scaledY);;
+      scaledZ = HEIGHT/2 - HEIGHT/4 * z;
+      println(scaledZ);
+      scaledT = HEIGHT/2 - HEIGHT/4 * t;
+      println(scaledT);
       pitch = calculatePitch();
       roll = calculateRoll();
       redraw();
