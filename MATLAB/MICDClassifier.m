@@ -1,3 +1,4 @@
+%SYDE FYDP Classifier
 %declare MICD classifier function
 function value = MICDClassifier(mu, sigma, x)
     
