@@ -25,8 +25,7 @@ float roll;
 
 final float alpha = 0.5;
 
-void setup() 
-{
+void setup() {
   x = 0;
   y = 0;
   z = 0;
@@ -49,8 +48,7 @@ void setup()
   myPort = new Serial(this, portName, 9600);
 }
 
-void draw()
-{
+void draw(){
   //shift data
   for (int i=0; i<WIDTH-1; i++){
     ValX[i] = ValX[i+1];
@@ -82,8 +80,7 @@ void draw()
   }
 }
 
-void drawOrientation() 
-{
+void drawCube(){
   //Set background
   background(0.5);
 
@@ -144,21 +141,72 @@ void drawOrientation()
   popMatrix(); 
 }
 
-void serialEvent (Serial serialData){
+void drawDrone(){
+  //Set background
+  background(0.5);
+
+  pushMatrix(); 
+  
+  translate(width/2, height/2, -30); 
+
+  //Rotate
+  rotateX(pitch*PI/180.0); 
+  rotateZ(roll*PI/180.0); 
+
+  //Print data
+  print("Pitch: ");
+  print(pitch);
+  print(", Roll: ");
+  println(roll);
+
+   // draw main body in red
+  fill(255, 0, 0, 200);
+  box(10, 10, 200);
+    
+  // draw front-facing tip in blue
+  fill(0, 0, 255, 200);
+  pushMatrix();
+  translate(0, 0, -120);
+  rotateX(PI/2);
+  drawCylinder(0, 20, 20, 8);
+  popMatrix();
+  // draw wings and tail fin in green
+  fill(0, 255, 0, 200);
+  
+  beginShape(TRIANGLES);
+  vertex(-100,  2, 30); vertex(0,  2, -80); vertex(100,  2, 30);  // wing top layer
+  vertex(-100, -2, 30); vertex(0, -2, -80); vertex(100, -2, 30);  // wing bottom layer
+  vertex(-2, 0, 98); vertex(-2, -30, 98); vertex(-2, 0, 70);  // tail left layer
+  vertex( 2, 0, 98); vertex( 2, -30, 98); vertex( 2, 0, 70);  // tail right layer
+  endShape();
+  
+  beginShape(QUADS);
+  vertex(-100, 2, 30); vertex(-100, -2, 30); vertex(  0, -2, -80); vertex(  0, 2, -80);
+  vertex( 100, 2, 30); vertex( 100, -2, 30); vertex(  0, -2, -80); vertex(  0, 2, -80);
+  vertex(-100, 2, 30); vertex(-100, -2, 30); vertex(100, -2,  30); vertex(100, 2,  30);
+  vertex(-2,   0, 98); vertex(2,   0, 98); vertex(2, -30, 98); vertex(-2, -30, 98);
+  vertex(-2,   0, 98); vertex(2,   0, 98); vertex(2,   0, 70); vertex(-2,   0, 70);
+  vertex(-2, -30, 98); vertex(2, -30, 98); vertex(2,   0, 70); vertex(-2,   0, 70);
+  endShape();
+
+  popMatrix(); 
+}
+
+void serialEvent (Serial serialData) {
   String data = serialData.readStringUntil('\n'); //get line of data
   
   if (data!=null){
     println("GETTING DATA FROM COM3");
     String[] tokenizedData = splitTokens(data);
     println(tokenizedData.length);
-    println("---begin loop---");
-    for (int j=0; j<tokenizedData.length; j++){
-      float var = float(tokenizedData[j]);
-      println(var);
-    }
-    println("---end loop---");
+    //println("---begin loop---");
+    //for (int j=0; j<tokenizedData.length; j++){
+    //  float var = float(tokenizedData[j]);
+    //  println(var);
+    //}
+    //println("---end loop---");
+    
     if (tokenizedData.length>=3){
-      
       println("--Original data--");
       x = float(tokenizedData[0]);
       println(x);
@@ -185,7 +233,7 @@ void serialEvent (Serial serialData){
   }
 }
 
-float calculatePitch(){
+float calculatePitch() {
   float fXg = 0;
   float fYg = 0;
   float fZg = 0;
@@ -196,13 +244,13 @@ float calculatePitch(){
   fZg = (z)*alpha + (fZg*(1.0-alpha));
   
   pitch = (atan2(fXg,sqrt(fYg*fYg + fZg*fZg))*180.0)/PI;
-  println(" Pitch: ");
+  print(" Pitch: ");
   println(pitch);
   
   return pitch;
 }
 
-float calculateRoll(){
+float calculateRoll() {
   float fYg = 0;
   float fZg = 0;
 
@@ -211,9 +259,49 @@ float calculateRoll(){
   fZg = (z)*alpha + (fZg*(1.0-alpha));
   
   roll = (atan2(-fYg, fZg)*180.0)/PI;
-  println(" Roll: ");
+  print(" Roll: ");
   println(roll);
   
   return roll;
+}
+
+void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
+    float angle = 0;
+    float angleIncrement = TWO_PI / sides;
+    beginShape(QUAD_STRIP);
+    for (int i = 0; i < sides + 1; ++i) {
+        vertex(topRadius*cos(angle), 0, topRadius*sin(angle));
+        vertex(bottomRadius*cos(angle), tall, bottomRadius*sin(angle));
+        angle += angleIncrement;
+    }
+    endShape();
+    
+    // If it is not a cone, draw the circular top cap
+    if (topRadius != 0) {
+        angle = 0;
+        beginShape(TRIANGLE_FAN);
+        
+        // Center point
+        vertex(0, 0, 0);
+        for (int i = 0; i < sides + 1; i++) {
+            vertex(topRadius * cos(angle), 0, topRadius * sin(angle));
+            angle += angleIncrement;
+        }
+        endShape();
+    }
+  
+    // If it is not a cone, draw the circular bottom cap
+    if (bottomRadius != 0) {
+        angle = 0;
+        beginShape(TRIANGLE_FAN);
+    
+        // Center point
+        vertex(0, tall, 0);
+        for (int i = 0; i < sides + 1; i++) {
+            vertex(bottomRadius * cos(angle), tall, bottomRadius * sin(angle));
+            angle += angleIncrement;
+        }
+        endShape();
+    }
 }
   
