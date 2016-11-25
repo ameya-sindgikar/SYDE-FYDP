@@ -110,6 +110,7 @@ void loop() {
     Serial.print("Gyro z ");
     Serial.println(gz/gyroscale);
     float pitch = calculatePitch();
+    float roll = calculateRoll();
     
     altm = baro.getAltitude();
     // Calculate rate of descent
@@ -212,4 +213,24 @@ float calculatePitch(){
   Serial.print(" Pitch: ");
   Serial.println(pitch);
   return pitch;
+}
+
+//Function to calculate roll
+float calculateRoll(){
+  float roll = 0;
+  //fXg, fYg, fZg are filtered acceleration values
+  double fXg = 0;
+  double fYg = 0;
+  double fZg = 0;
+
+  //low-pass filter
+  fXg = (ax)*alpha + (fXg*(1.0-alpha));
+  fYg = (ay)*alpha + (fYg*(1.0-alpha));
+  fZg = (az)*alpha + (fZg*(1.0-alpha));
+
+  //calculate roll
+  roll = (atan2(-fYg, fZg)*180.0)/M_PI;
+  Serial.print(" Roll: ");
+  Serial.println(roll);
+  return roll;
 }
