@@ -32,6 +32,8 @@ float altm;
 int altmcount = 0;
 int falling = 0;
 
+const float alpha = 0.5;
+
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 
@@ -65,7 +67,7 @@ void setup() {
 
   
   // set to +/- 8G sensitivity
-  accelgyro.setFullScaleAccelRange(2);
+  accelgyro.setFullScaleAccelRange(0);
 
   // initialize device
   Serial.println("Initializing I2C devices...");
@@ -107,6 +109,7 @@ void loop() {
     Serial.print(gy/gyroscale);
     Serial.print("Gyro z ");
     Serial.println(gz/gyroscale);
+    float pitch = calculatePitch();
     
     altm = baro.getAltitude();
     // Calculate rate of descent
@@ -189,4 +192,24 @@ int normalizeThrottle(int value) {
   if( value > 180 )
     return 180;
   return value;
+}
+
+//Function to calculate pitch
+float calculatePitch(){
+  float pitch = 0;
+  //fXg, fYg, fZg are filtered acceleration values
+  double fXg = 0;
+  double fYg = 0;
+  double fZg = 0;
+
+  //low-pass filter
+  fXg = (ax)*alpha + (fXg*(1.0-alpha));
+  fYg = (ay)*alpha + (fYg*(1.0-alpha));
+  fZg = (az)*alpha + (fZg*(1.0-alpha));
+
+  //calculate pitch
+  pitch = (atan2(fXg,sqrt(fYg*fYg + fZg*fZg))*180.0)/M_PI;
+  Serial.print(" Pitch: ");
+  Serial.println(pitch);
+  return pitch;
 }
