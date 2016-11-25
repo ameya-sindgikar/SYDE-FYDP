@@ -145,11 +145,14 @@ void loop() {
 */
     int throttle = 10;
     if (falling == 1) {
-    // Change throttle to the new value
-    // dummy throttle value
-      esc.write(throttle);
-    //changeThrottle(throttle);
-    //falling = 0;
+      Serial.println("--FALLING--");
+      //turn on propeller only if pitch angle is between -30 degrees and +30 degrees
+      if (pitch>-30.0 && pitch<30.0){
+       esc.write(throttle);
+        //changeThrottle(throttle); // Change throttle to the new value
+        //falling = 0;
+      }
+      Serial.println("Pitch angle out of range to turn on prop.");
     }
     
   //}
