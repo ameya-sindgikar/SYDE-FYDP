@@ -147,12 +147,13 @@ void loop() {
     if (falling == 1) {
       Serial.println("--FALLING--");
       //turn on propeller only if pitch angle is between -30 degrees and +30 degrees
-      if (pitch>-30.0 && pitch<30.0){
+      //and roll angle is great than +150 degrees and smaller than -150 degrees
+      if (pitch>-30.0 && pitch<30.0 && roll>150.0 && roll<-150.0){
        esc.write(throttle);
         //changeThrottle(throttle); // Change throttle to the new value
         //falling = 0;
       }
-      Serial.println("Pitch angle out of range to turn on prop.");
+      Serial.println("Pitch/roll angle out of range to turn on prop.");
     }
     
   //}
