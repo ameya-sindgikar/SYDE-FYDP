@@ -4,11 +4,21 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var SerialPort = require("serialport");
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+//get data from the serial port
+var serialport = new SerialPort("COM3"); //different for macs
+serialport.on('open', function(){
+  console.log('Established Serial Port Connection');
+  serialport.on('data', function(data){
+      console.log(data[0]);
+  });
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
