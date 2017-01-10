@@ -12,12 +12,21 @@ var users = require('./routes/users');
 var app = express();
 
 //get data from the serial port
-var serialport = new SerialPort("COM3"); //different for macs
-serialport.on('open', function(){
-  console.log('Established Serial Port Connection');
-  serialport.on('data', function(data){
-      console.log("MMA8452 Accel: " + data[0] + " " + data[2] + " " + data[4]); //get accel x,y,z data
-  });
+var serialport = new SerialPort('COM3', function(err){
+  if (err){
+    return console.log('Error connecting to serial port ', err.message);
+  }
+});
+serialport.on('open', function(err){
+  if (err){
+    console.log('Error listening to serial port ', err.message);
+  }
+  else {
+    console.log('Established Serial Port Connection');
+    serialport.on('data', function(data){
+        console.log("MMA8452 Accel: " + data[0] + " " + data[2] + " " + data[4]); //get accel x,y,z data
+    });
+  }
 });
 
 // view engine setup
