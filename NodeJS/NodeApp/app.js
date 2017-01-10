@@ -24,7 +24,11 @@ serialport.on('open', function(err){
   else {
     console.log('Established Serial Port Connection');
     serialport.on('data', function(data){
-        console.log("MMA8452 Accel: " + data[0] + " " + data[2] + " " + data[4]); //get accel x,y,z data
+        //parse raw data
+        var x = (data[0]<<8 | data[1]) >> 4;
+        var y = (data[2]<<8 | data[3]) >> 4;
+        var z = (data[4]<<8 | data[5]) >> 4;
+        console.log("MMA8452 Accel: " + x + " " + y + " " + z);
     });
   }
 });
