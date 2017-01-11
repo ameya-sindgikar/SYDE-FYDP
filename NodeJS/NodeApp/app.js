@@ -56,7 +56,8 @@ var x
 
 board.on("ready", function() {
   var accelerometer = new five.Accelerometer({
-    controller: "MMA8452"
+    controller: "MMA8452",
+    sensitivity: 256  //1024-2g, 512-4g, 256-8g
   });
 
   accelerometer.on("change", function() {
