@@ -4,33 +4,85 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var SerialPort = require("serialport");
+var SerialPort = require('serialport');
+var five = require('johnny-five');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
 
+//accelerometer variables
+var x;
+var y;
+var z;
+var accelPitch;
+var accelRoll;
+var acceleration;
+var inclination;
+var orientation;
+
+//calculated variables
+var calcPitch;
+var calcRoll;
+
+
 //get data from the serial port
-var serialport = new SerialPort('COM3', function(err){
-  if (err){
-    return console.log('Error connecting to serial port ', err.message);
-  }
-});
-serialport.on('open', function(err){
-  if (err){
-    console.log('Error listening to serial port ', err.message);
-  }
-  else {
-    console.log('Established Serial Port Connection');
-    serialport.on('data', function(data){
-        //parse raw data
-        var x = (data[0]<<8 | data[1]) >> 4;
-        var y = (data[2]<<8 | data[3]) >> 4;
-        var z = (data[4]<<8 | data[5]) >> 4;
-        console.log("MMA8452 Accel: " + x + " " + y + " " + z);
+// var serialport = new SerialPort('COM3', function(err){
+//   if (err){
+//     return console.log('Error connecting to serial port ', err.message);
+//   }
+// });
+// serialport.on('open', function(err){
+//   if (err){
+//     console.log('Error listening to serial port ', err.message);
+//   }
+//   else {
+//     console.log('Established Serial Port Connection');
+//     serialport.on('data', function(data){
+//         //parse raw data
+//         var x = (data[0]<<8 | data[1]) >> 4;
+//         var y = (data[2]<<8 | data[3]) >> 4;
+//         var z = (data[4]<<8 | data[5]) >> 4;
+//         console.log("MMA8452 Accel: " + x + " " + y + " " + z);
+//     });
+//   }
+// });
+
+//get data from johnny-five
+var five = require("johnny-five");
+var board = new five.Board();
+var x
+
+board.on("ready", function() {
+  var accelerometer = new five.Accelerometer({
+    controller: "MMA8452"
+  });
+
+  accelerometer.on("change", function() {
+    x = this.x;
+    y = this.y;
+    z = this.z;
+    accelPitch = this.pitch;
+    accelRoll = this.roll;
+    acceleration = this.acceleration;
+    inclination = this.inclination;
+    orientation = this.orientation;
+
+    console.log("MMA8452");
+    console.log("X ", x);
+    console.log("Y ", y);
+    console.log("Z ", z);
+    console.log("accelPitch ", accelPitch);
+    console.log("accelRoll ", accelRoll);
+    console.log("___________");
+  });
+
+  ["tap", "tap:single", "tap:double"].forEach(function(event) {
+    accelerometer.on(event, function() {
+      console.log(event);
     });
-  }
+  });
 });
 
 // view engine setup
