@@ -22,33 +22,6 @@ var acceleration;
 var inclination;
 var orientation;
 
-//calculated variables
-var calcPitch;
-var calcRoll;
-
-
-//get data from the serial port
-// var serialport = new SerialPort('COM3', function(err){
-//   if (err){
-//     return console.log('Error connecting to serial port ', err.message);
-//   }
-// });
-// serialport.on('open', function(err){
-//   if (err){
-//     console.log('Error listening to serial port ', err.message);
-//   }
-//   else {
-//     console.log('Established Serial Port Connection');
-//     serialport.on('data', function(data){
-//         //parse raw data
-//         var x = (data[0]<<8 | data[1]) >> 4;
-//         var y = (data[2]<<8 | data[3]) >> 4;
-//         var z = (data[4]<<8 | data[5]) >> 4;
-//         console.log("MMA8452 Accel: " + x + " " + y + " " + z);
-//     });
-//   }
-// });
-
 //get data from johnny-five
 var five = require("johnny-five");
 var board = new five.Board();
