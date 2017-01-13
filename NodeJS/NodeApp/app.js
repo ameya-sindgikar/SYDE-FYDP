@@ -54,11 +54,9 @@ board.on("ready", function() {
     console.log("Z ", z);
     console.log("accelPitch ", accelPitch);
     console.log("accelRoll ", accelRoll);
-    console.log("___________");
 
-    if (accelPitch>25.0){
-      storeData(x, y, z, accelPitch, accelRoll);
-    }
+    storeData(x, y, z, accelPitch, accelRoll);
+
   });
 
   ["tap", "tap:single", "tap:double"].forEach(function(event) {
@@ -112,10 +110,11 @@ function storeData(aX, aY, aZ, aPitch, aRoll){
 
   mongo.connect(url, function (err, db){
     assert.equal(null, err);
-    db.collection('accelColl').insertOne(item, function(err, result){
+    db.collection('TestCollection').insertOne(item, function(err, result){
       assert.equal(null, err);
       console.log('Item inserted');
       console.log(item);
+      console.log('_______________________');
       db.close();
     });
   });
