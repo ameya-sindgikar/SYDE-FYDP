@@ -8,6 +8,7 @@ var SerialPort = require('serialport');
 var five = require('johnny-five');
 var mongo = require('mongodb').MongoClient;
 var assert = require('assert');
+var moment = require('moment');
 
 
 var index = require('./routes/index');
@@ -105,7 +106,8 @@ function storeData(aX, aY, aZ, aPitch, aRoll){
     y: aY,
     z: aZ,
     pitch: aPitch,
-    roll: aRoll
+    roll: aRoll,
+    created: moment().format('MMMM Do h:mm:ss:SS')
   };
 
   mongo.connect(url, function (err, db){
