@@ -6,11 +6,17 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var SerialPort = require('serialport');
 var five = require('johnny-five');
+var mongo = require('mongodb').MongoClient;
+var assert = require('assert');
+
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+//MongoDB url
+var url = 'mongodb://localhost:27017/accelDataDB';
 
 //accelerometer variables
 var x;
@@ -25,7 +31,6 @@ var orientation;
 //get data from johnny-five
 var five = require("johnny-five");
 var board = new five.Board();
-var x
 
 board.on("ready", function() {
   var accelerometer = new five.Accelerometer({
@@ -50,6 +55,10 @@ board.on("ready", function() {
     console.log("accelPitch ", accelPitch);
     console.log("accelRoll ", accelRoll);
     console.log("___________");
+
+    if (accelPitch>25.0){
+      storeData(x, y, z, accelPitch, accelRoll);
+    }
   });
 
   ["tap", "tap:single", "tap:double"].forEach(function(event) {
@@ -91,5 +100,25 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+function storeData(aX, aY, aZ, aPitch, aRoll){
+  var item = {
+    x: aX,
+    y: aY,
+    z: aZ,
+    pitch: aPitch,
+    roll: aRoll
+  };
+
+  mongo.connect(url, function (err, db){
+    assert.equal(null, err);
+    db.collection('accelColl').insertOne(item, function(err, result){
+      assert.equal(null, err);
+      console.log('Item inserted');
+      console.log(item);
+      db.close();
+    });
+  });
+}
 
 module.exports = app;
