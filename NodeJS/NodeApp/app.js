@@ -29,6 +29,10 @@ var acceleration;
 var inclination;
 var orientation;
 
+//altimeter variables
+var altFeet;
+var altMeters;
+
 //get data from johnny-five
 var five = require("johnny-five");
 var board = new five.Board();
@@ -59,6 +63,20 @@ board.on("ready", function() {
     storeData(x, y, z, accelPitch, accelRoll);
 
   });
+
+  // var altimeter = new five.Altimeter({
+  //   controller: "MPL3115A2",
+  //   elevation: 329 //City of Waterloo elevation
+  // });
+  //
+  // altimeter.on("data", fundction(){
+  //   altFeet = this.feet;
+  //   altMeters = this.meters;
+  //
+  //   console.log("MPL3115A2");
+  //   console.log("Altitude in feet: ", altFeet);
+  //   console.log("Altitude in meters: ", altMeters);
+  // });
 
   ["tap", "tap:single", "tap:double"].forEach(function(event) {
     accelerometer.on(event, function() {
