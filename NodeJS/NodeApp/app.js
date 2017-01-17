@@ -64,6 +64,18 @@ board.on("ready", function() {
 
   });
 
+  // var imu = new five.IMU({
+  //   controller: "MPU6050"
+  // });
+  //
+  // imu.on("change", function(){
+  //   //TODO: get accel, gyro data
+  //   //Accelerometer data
+  //   //x, y, z, pitch, roll, accel, inclination, orientation
+  //   //Gyroscope data
+  //   //x, y, z, pitch, roll, yaw, rate
+  // });
+
   // var altimeter = new five.Altimeter({
   //   controller: "MPL3115A2",
   //   elevation: 329 //City of Waterloo elevation
