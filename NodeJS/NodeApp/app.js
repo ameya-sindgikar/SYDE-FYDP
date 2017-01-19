@@ -73,10 +73,11 @@ board.on("ready", function() {
   // });
 
   var imu = new five.IMU({
-    controller: "MPU6050"
+    controller: "MPU6050",
+    freq: 100 //100 milliseconds
   });
 
-  imu.on("change", function(){
+  imu.on("data", function(){
     aX = this.accelerometer.x;
     aY = this.accelerometer.y;
     aZ = this.accelerometer.z;
@@ -107,6 +108,7 @@ board.on("ready", function() {
 
   var altimeter = new five.Altimeter({
     controller: "MPL3115A2",
+    freq: 100,
     elevation: 333 //Current elevation
   });
 
