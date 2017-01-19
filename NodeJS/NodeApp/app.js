@@ -20,14 +20,22 @@ var app = express();
 var url = 'mongodb://localhost:27017/accelDataDB';
 
 //accelerometer variables
-var x;
-var y;
-var z;
-var accelPitch;
-var accelRoll;
+var aX;
+var aY;
+var aZ;
+var aPitch;
+var aRoll;
 var acceleration;
 var inclination;
 var orientation;
+
+//Gyroscope variables
+var gX;
+var gY;
+var gZ;
+var gPitch;
+var gRoll;
+var gYaw;
 
 //altimeter variables
 var altFeet;
@@ -69,18 +77,31 @@ board.on("ready", function() {
   });
 
   imu.on("change", function(){
-    x = this.accelerometer.x;
-    y = this.accelerometer.y;
-    z = this.accelerometer.z;
-    accelPitch = this.accelerometer.pitch;
-    accelRoll = this.accelerometer.roll;
+    aX = this.accelerometer.x;
+    aY = this.accelerometer.y;
+    aZ = this.accelerometer.z;
+    aPitch = this.accelerometer.pitch;
+    aRoll = this.accelerometer.roll;
+
+    gX = this.gyro.x;
+    gY = this.gyro.y;
+    gZ = this.gyro.z;
+    gPitch = this.gyro.pitch;
+    gRoll = this.gyro.roll;
+    gYaw = this.gyro.yaw;
 
     console.log("MPU6050");
-    console.log("X ",x);
-    console.log("Y ",y);
-    console.log("Z ",z);
-    console.log("accelPitch ",accelPitch);
-    console.log("accelRoll ",accelRoll);
+    console.log("aX     ",aX);
+    console.log("aY     ",aY);
+    console.log("aZ     ",aZ);
+    console.log("aPitch ",aPitch);
+    console.log("aRoll  ",aRoll);
+    console.log("gX     ",gX);
+    console.log("gY     ",gY);
+    console.log("gZ     ",gZ);
+    console.log("gPitch ",gPitch);
+    console.log("gRoll  ",gRoll);
+    console.log("gYaw   ",gYaw);
 
   });
 
