@@ -38,63 +38,71 @@ var five = require("johnny-five");
 var board = new five.Board();
 
 board.on("ready", function() {
-  var accelerometer = new five.Accelerometer({
-    controller: "MMA8452",
-    sensitivity: 256  //1024-2g, 512-4g, 256-8g
-  });
-
-  accelerometer.on("change", function() {
-    x = this.x;
-    y = this.y;
-    z = this.z;
-    accelPitch = this.pitch;
-    accelRoll = this.roll;
-    acceleration = this.acceleration;
-    inclination = this.inclination;
-    orientation = this.orientation;
-
-    console.log("MMA8452");
-    console.log("X ", x);
-    console.log("Y ", y);
-    console.log("Z ", z);
-    console.log("accelPitch ", accelPitch);
-    console.log("accelRoll ", accelRoll);
-
-    storeData(x, y, z, accelPitch, accelRoll);
-
-  });
-
-  // var imu = new five.IMU({
-  //   controller: "MPU6050"
+  // var accelerometer = new five.Accelerometer({
+  //   controller: "MMA8452",
+  //   sensitivity: 256  //1024-2g, 512-4g, 256-8g
   // });
   //
-  // imu.on("change", function(){
-  //   //TODO: get accel, gyro data
-  //   //Accelerometer data
-  //   //x, y, z, pitch, roll, accel, inclination, orientation
-  //   //Gyroscope data
-  //   //x, y, z, pitch, roll, yaw, rate
+  // accelerometer.on("change", function() {
+  //   x = this.x;
+  //   y = this.y;
+  //   z = this.z;
+  //   accelPitch = this.pitch;
+  //   accelRoll = this.roll;
+  //   acceleration = this.acceleration;
+  //   inclination = this.inclination;
+  //   orientation = this.orientation;
+  //
+  //   console.log("MMA8452");
+  //   console.log("X ", x);
+  //   console.log("Y ", y);
+  //   console.log("Z ", z);
+  //   console.log("accelPitch ", accelPitch);
+  //   console.log("accelRoll ", accelRoll);
+  //
+  //   storeData(x, y, z, accelPitch, accelRoll);
+  //
   // });
 
-  // var altimeter = new five.Altimeter({
-  //   controller: "MPL3115A2",
-  //   elevation: 329 //City of Waterloo elevation
-  // });
-  //
-  // altimeter.on("data", fundction(){
-  //   altFeet = this.feet;
-  //   altMeters = this.meters;
-  //
-  //   console.log("MPL3115A2");
-  //   console.log("Altitude in feet: ", altFeet);
-  //   console.log("Altitude in meters: ", altMeters);
-  // });
-
-  ["tap", "tap:single", "tap:double"].forEach(function(event) {
-    accelerometer.on(event, function() {
-      console.log(event);
-    });
+  var imu = new five.IMU({
+    controller: "MPU6050"
   });
+
+  imu.on("change", function(){
+    x = this.accelerometer.x;
+    y = this.accelerometer.y;
+    z = this.accelerometer.z;
+    accelPitch = this.accelerometer.pitch;
+    accelRoll = this.accelerometer.roll;
+
+    console.log("MPU6050");
+    console.log("X ",x);
+    console.log("Y ",y);
+    console.log("Z ",z);
+    console.log("accelPitch ",accelPitch);
+    console.log("accelRoll ",accelRoll);
+
+  });
+
+  var altimeter = new five.Altimeter({
+    controller: "MPL3115A2",
+    elevation: 333 //Current elevation
+  });
+
+  altimeter.on("data", function(){
+    altFeet = this.feet;
+    altMeters = this.meters;
+
+    console.log("MPL3115A2");
+    console.log("Altitude in feet: ", altFeet);
+    console.log("Altitude in meters: ", altMeters);
+  });
+
+  // ["tap", "tap:single", "tap:double"].forEach(function(event) {
+  //   accelerometer.on(event, function() {
+  //     console.log(event);
+  //   });
+  // });
 });
 
 // view engine setup
