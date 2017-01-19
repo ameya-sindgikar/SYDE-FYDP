@@ -46,44 +46,17 @@ var five = require("johnny-five");
 var board = new five.Board();
 
 board.on("ready", function() {
-  // var accelerometer = new five.Accelerometer({
-  //   controller: "MMA8452",
-  //   sensitivity: 256  //1024-2g, 512-4g, 256-8g
-  // });
-  //
-  // accelerometer.on("change", function() {
-  //   x = this.x;
-  //   y = this.y;
-  //   z = this.z;
-  //   accelPitch = this.pitch;
-  //   accelRoll = this.roll;
-  //   acceleration = this.acceleration;
-  //   inclination = this.inclination;
-  //   orientation = this.orientation;
-  //
-  //   console.log("MMA8452");
-  //   console.log("X ", x);
-  //   console.log("Y ", y);
-  //   console.log("Z ", z);
-  //   console.log("accelPitch ", accelPitch);
-  //   console.log("accelRoll ", accelRoll);
-  //
-  //   storeData(x, y, z, accelPitch, accelRoll);
-  //
-  // });
-
+  //IMU
   var imu = new five.IMU({
     controller: "MPU6050",
     freq: 100 //100 milliseconds
   });
-
   imu.on("data", function(){
     aX = this.accelerometer.x;
     aY = this.accelerometer.y;
     aZ = this.accelerometer.z;
     aPitch = this.accelerometer.pitch;
     aRoll = this.accelerometer.roll;
-
     gX = this.gyro.x;
     gY = this.gyro.y;
     gZ = this.gyro.z;
@@ -103,15 +76,14 @@ board.on("ready", function() {
     console.log("gPitch ",gPitch);
     console.log("gRoll  ",gRoll);
     console.log("gYaw   ",gYaw);
-
   });
 
+  //Altimeter
   var altimeter = new five.Altimeter({
     controller: "MPL3115A2",
     freq: 100,
     elevation: 333 //Current elevation
   });
-
   altimeter.on("data", function(){
     altFeet = this.feet;
     altMeters = this.meters;
@@ -119,13 +91,9 @@ board.on("ready", function() {
     console.log("MPL3115A2");
     console.log("Altitude in feet: ", altFeet);
     console.log("Altitude in meters: ", altMeters);
+    console.log("_______________________________")
   });
 
-  // ["tap", "tap:single", "tap:double"].forEach(function(event) {
-  //   accelerometer.on(event, function() {
-  //     console.log(event);
-  //   });
-  // });
 });
 
 // view engine setup
