@@ -76,6 +76,8 @@ board.on("ready", function() {
     console.log("gPitch ",gPitch);
     console.log("gRoll  ",gRoll);
     console.log("gYaw   ",gYaw);
+
+    storeData();
   });
 
   //Altimeter
@@ -91,7 +93,9 @@ board.on("ready", function() {
     console.log("MPL3115A2");
     console.log("Altitude in feet: ", altFeet);
     console.log("Altitude in meters: ", altMeters);
-    console.log("_______________________________")
+    console.log("_______________________________");
+
+    storeData();
   });
 
 });
@@ -129,14 +133,10 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-function storeData(aX, aY, aZ, aPitch, aRoll){
+function storeData(){
   var item = {
-    x: aX,
-    y: aY,
-    z: aZ,
-    pitch: aPitch,
-    roll: aRoll,
-    created: moment().format('MMMM Do h:mm:ss:SS')
+    data: [aX, aY, aZ, gX, gY, gZ, aPitch, aRoll, altMeters],
+    created: moment().format('MMMM Do h:mm:ss:SS') //time intervals in milliseconds
   };
 
   mongo.connect(url, function (err, db){
