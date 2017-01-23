@@ -9,6 +9,7 @@ var five = require('johnny-five');
 var mongo = require('mongodb').MongoClient;
 var assert = require('assert');
 var moment = require('moment');
+var generator = require('knear');
 
 
 var index = require('./routes/index');
@@ -40,6 +41,10 @@ var gYaw;
 //altimeter variables
 var altFeet;
 var altMeters;
+
+//kNN variables
+var k = 3; //TBD
+var machine = new generator.kNear(k);
 
 //get data from johnny-five
 var five = require("johnny-five");
