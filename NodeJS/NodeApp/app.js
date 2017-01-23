@@ -140,7 +140,7 @@ function storeData(){
   var dataArray = [aX, aY, aZ, gX, gY, gZ, aPitch, aRoll, altMeters];
   var item = {
     data: dataArray,
-    created: moment().format('MMMM Do h:mm:ss:SS')
+    created: moment().valueOf() //number of milliseconds since Jan 1 1970 (Epoch)
   };
 
   mongo.connect(url, function (err, db){
