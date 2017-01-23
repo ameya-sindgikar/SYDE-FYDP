@@ -81,8 +81,6 @@ board.on("ready", function() {
     console.log("gPitch ",gPitch);
     console.log("gRoll  ",gRoll);
     console.log("gYaw   ",gYaw);
-
-    storeData();
   });
 
   //Altimeter
@@ -139,9 +137,10 @@ app.use(function(err, req, res, next) {
 });
 
 function storeData(){
+  var dataArray = [aX, aY, aZ, gX, gY, gZ, aPitch, aRoll, altMeters];
   var item = {
-    data: [aX, aY, aZ, gX, gY, gZ, aPitch, aRoll, altMeters],
-    created: moment().format('MMMM Do h:mm:ss:SS') //time intervals in milliseconds
+    data: dataArray,
+    created: moment().format('MMMM Do h:mm:ss:SS')
   };
 
   mongo.connect(url, function (err, db){
