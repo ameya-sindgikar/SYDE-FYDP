@@ -3,5 +3,14 @@ extends layout
 block content
   h1= title
 
-  for item in items.reverse()
-    p #{item.data}, Created: #{item.created}
+    div
+      table
+        thead
+          tr
+           th Sensor data
+           th Created
+        tbody
+          for item in items.reverse()
+            tr
+              td= item.data
+              td= item.created
