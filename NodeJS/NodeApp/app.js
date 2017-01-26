@@ -26,7 +26,7 @@ var aY;
 var aZ;
 var aPitch;
 var aRoll;
-var acceleration;
+var aAcc;
 var inclination;
 var orientation;
 
@@ -60,6 +60,7 @@ board.on("ready", function() {
     aX = this.accelerometer.x;
     aY = this.accelerometer.y;
     aZ = this.accelerometer.z;
+    aAcc = this.accelerometer.acceleration;
     aPitch = this.accelerometer.pitch;
     aRoll = this.accelerometer.roll;
     gX = this.gyro.x;
@@ -73,6 +74,7 @@ board.on("ready", function() {
     console.log("aX     ",aX);
     console.log("aY     ",aY);
     console.log("aZ     ",aZ);
+    console.log("aAcc   ",aAcc);
     console.log("aPitch ",aPitch);
     console.log("aRoll  ",aRoll);
     console.log("gX     ",gX);
@@ -137,7 +139,7 @@ app.use(function(err, req, res, next) {
 });
 
 function storeData(){
-  var dataArray = [aX, aY, aZ, gX, gY, gZ, aPitch, aRoll, altMeters];
+  var dataArray = [aX, aY, aZ, aAcc, gX, gY, gZ, aPitch, aRoll, altMeters];
   var item = {
     data: dataArray,
     created: moment().format('MMMM Do h:mm:ss:SS'),
