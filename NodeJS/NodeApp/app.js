@@ -4,7 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var SerialPort = require('serialport');
 var five = require('johnny-five');
 var mongo = require('mongodb').MongoClient;
 var assert = require('assert');
@@ -17,8 +16,9 @@ var users = require('./routes/users');
 
 var app = express();
 
-//MongoDB url
+//MongoDB variables
 var url = 'mongodb://localhost:27017/accelDataDB';
+var collectionName = 'FailureOneCollection';
 
 //accelerometer variables
 var aX;
@@ -140,12 +140,13 @@ function storeData(){
   var dataArray = [aX, aY, aZ, gX, gY, gZ, aPitch, aRoll, altMeters];
   var item = {
     data: dataArray,
-    created: moment().valueOf() //number of milliseconds since Jan 1 1970 (Epoch)
+    created: moment().format('MMMM Do h:mm:ss:SS'),
+    createdUnix: moment().valueOf() //number of milliseconds since Jan 1 1970 (Epoch)
   };
 
   mongo.connect(url, function (err, db){
     assert.equal(null, err);
-    db.collection('TestCollection').insertOne(item, function(err, result){
+    db.collection(collectionName).insertOne(item, function(err, result){
       assert.equal(null, err);
       console.log('Item inserted');
       console.log(item);
