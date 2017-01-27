@@ -18,7 +18,7 @@ var app = express();
 
 //MongoDB variables
 var url = 'mongodb://localhost:27017/accelDataDB';
-var collectionName = 'FailureOneCollection';
+var collectionName = 'FailureTwoCollection';
 
 //accelerometer variables
 var aX;
