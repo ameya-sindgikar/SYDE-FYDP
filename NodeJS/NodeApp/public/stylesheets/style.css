@@ -6,3 +6,14 @@ body {
 a {
   color: #00B7FF;
 }
+
+thead {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+tbody {
+  font-weight: normal;
+  font-size: 15px;
+  text-align: center;
+}

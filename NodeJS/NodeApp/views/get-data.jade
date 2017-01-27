@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1= title
+
+    div
+      table
+        thead
+          tr
+           th Sensor data
+           th Created
+        tbody
+          for item in items.reverse()
+            tr
+              td= item.data
+              td= item.created
