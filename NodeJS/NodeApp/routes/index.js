@@ -6,7 +6,7 @@ var assert = require('assert');
 //MongoDB url
 var url = 'mongodb://localhost:27017/accelDataDB';
 
-var collectionName = 'TestCollection';
+var collectionName = 'FailureOneCollection';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

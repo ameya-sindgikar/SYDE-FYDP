@@ -9,8 +9,10 @@ block content
           tr
            th Sensor data
            th Created
+           th Created (Unix)
         tbody
           for item in items.reverse()
             tr
               td= item.data
               td= item.created
+              td= item.createdUnix
