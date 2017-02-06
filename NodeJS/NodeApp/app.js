@@ -18,7 +18,6 @@ var app = express();
 
 //MongoDB variables
 var url = 'mongodb://localhost:27017/TrainingDataDB';
-var collectionName = 'XYnov3';
 
 //accelerometer variables
 var aX;
