@@ -17,8 +17,7 @@ var users = require('./routes/users');
 var app = express();
 
 //MongoDB variables
-var url = 'mongodb://localhost:27017/accelDataDB';
-var collectionName = 'FailureOneCollection';
+var url = 'mongodb://localhost:27017/TrainingDataDB';
 
 //accelerometer variables
 var aX;
