@@ -6,6 +6,10 @@ var assert = require('assert');
 //MongoDB url
 var url = 'mongodb://localhost:27017/TrainingDataDB';
 
+<<<<<<< HEAD
+var collectionName = 'FailureTwoCollection';
+=======
+>>>>>>> master
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
