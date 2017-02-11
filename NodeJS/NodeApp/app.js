@@ -18,6 +18,7 @@ var app = express();
 
 //MongoDB variables
 var url = 'mongodb://localhost:27017/TrainingDataDB';
+var collectionName = 'TakeOffExp4';
 
 //accelerometer variables
 var aX;
