@@ -6,7 +6,7 @@ var assert = require('assert');
 //MongoDB url
 var url = 'mongodb://localhost:27017/TrainingDataDB';
 
-var collectionName = 'TakeOffExp4';
+var collectionName = 'TakeOffExp14';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
