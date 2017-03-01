@@ -10,36 +10,27 @@
 #include "I2Cdev.h"
 #include "MPU6050.h"
 
+//I2C initialization
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
     #include "Wire.h"
 #endif
-/// Set up the accelerometer and gyro 
 
+/// Set up the accelerometer and gyro 
 MPU6050 accelgyro;
 
 /// Set up the altimeter 
-
 Adafruit_MPL3115A2 baro = Adafruit_MPL3115A2();
 
 // Set up nRF24L01 radio on SPI bus plus pins 9 & 10 
-
 RF24 radio(9,10);
 
 // Define variables for acc/gyro
-
-float prevaltm;
+// same scale as johnny five
 float scale = 16384.0;
 float gyroscale = 131.0;
-float startaltm;
-int startaltmcount = 0;
-float altm;
-int altmcount = 0;
-int falling = 0;
-
-const float alpha = 0.5;
-
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
+int16_t payload[5];
 
 #define OUTPUT_READABLE_ACCELGYRO
 
@@ -85,6 +76,7 @@ void setup(void)
   printf("*** PRESS 'T' to begin transmitting to the other node\n\r");
 
   // set acc/gyro to +/- 8G sensitivity
+  // make sure this is the same as johnny five
   accelgyro.setFullScaleAccelRange(0);
 
   // initialize MPU6050
@@ -154,25 +146,37 @@ void loop(void)
   // setup MPU6050
   accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 
-  // print all values 
-  Serial.print("Acc X ");
-  Serial.print(ax/scale);
+  // set and print all values to validate
+  Serial.print("Acc x ");
+  ax = ax/scale;
+  Serial.print(ax);
   Serial.print("Acc y ");
-  Serial.print(ay/scale);
+  ay = ay/scale;
+  Serial.print(ay);
   Serial.print("Acc z ");
-  Serial.println(az/scale);
-  Serial.print("Gyro X ");
-  Serial.print(gx/gyroscale);
+  az = az/scale;
+  Serial.println(az);
+  Serial.print("Gyro x ");
+  gx = gx/gyroscale;
+  Serial.print(gx);
   Serial.print("Gyro y ");
-  Serial.print(gy/gyroscale);
+  gy = gy/gyroscale;
+  Serial.print(gy);
   Serial.print("Gyro z ");
-  Serial.println(gz/gyroscale);
-  //float pitch = calculatePitch();
-  //float roll = calculateRoll();
-  
+  gz = gz/gyroscale;
+  Serial.println(gz);
+
+  // build payload
+  //TODO make this into a loop later
+  payload[0] = ax;
+  payload[1] = ay;
+  payload[2] = az;
+  payload[3] = gx;
+  payload[4] = gy;
+  payload[5] = gz;
   
   //
-  // Ping out role.  Repeatedly send the current time
+  // Transmitter Role.  Repeatedly send acceleration and gyro values
   //
 
   if (role == role_ping_out)
@@ -180,17 +184,18 @@ void loop(void)
     // First, stop listening so we can talk.
     radio.stopListening();
 
+    //TODO delete later
     // Take the time, and send it.  This will block until complete
-    unsigned long time = millis();
-    printf("Now sending %lu...",time);
-    bool ok = radio.write( &time, sizeof(unsigned long) );
+    //unsigned long time = millis();
+    //printf("Now sending %lu...",time);
+    bool ok = radio.write( &payload, sizeof(payload) );
     
     if (ok)
-      printf("ok...");
+      printf("SUCCESSFUL");
     else
-      printf("failed.\n\r");
+      printf("FAILED\n\r");
 
-    // Now, continue listening
+    // Start listening for new data 
     radio.startListening();
 
     // Wait here until we get a response, or timeout (250ms)
@@ -208,52 +213,15 @@ void loop(void)
     else
     {
       // Grab the response, compare, and send to debugging spew
-      unsigned long got_time;
-      radio.read( &got_time, sizeof(unsigned long) );
+      //unsigned long got_time;
+      //radio.read( &got_time, sizeof(unsigned long) );
 
       // Spew it
-      printf("Got response %lu, round-trip delay: %lu\n\r",got_time,millis()-got_time);
+      //printf("Got response %lu, round-trip delay: %lu\n\r",got_time,millis()-got_time);
     }
 
     // Try again 1s later
     delay(1000);
-  }
-
-  //
-  // Pong back role.  Receive each packet, dump it out, and send it back
-  //
-
-  if ( role == role_pong_back )
-  {
-    // if there is data ready
-    if ( radio.available() )
-    {
-      // Dump the payloads until we've gotten everything
-      unsigned long got_time;
-      bool done = false;
-      while (!done)
-      {
-        // Fetch the payload, and see if this was the last one.
-        done = radio.read( &got_time, sizeof(unsigned long) );
-
-        // Spew it
-        printf("Got payload %lu...",got_time);
-
-	// Delay just a little bit to let the other unit
-	// make the transition to receiver
-	delay(20);
-      }
-
-      // First, stop listening so we can talk
-      radio.stopListening();
-
-      // Send the final one back.
-      radio.write( &got_time, sizeof(unsigned long) );
-      printf("Sent response.\n\r");
-
-      // Now, resume listening so we catch the next packets.
-      radio.startListening();
-    }
   }
 
   //
