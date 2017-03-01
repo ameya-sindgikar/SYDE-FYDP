@@ -1,0 +1,32 @@
+{
+  "name": "nrf",
+  "version": "0.8.3",
+  "description": "nRF24L01 driver library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/natevw/node-nrf.git"
+  },
+  "keywords": [
+    "nrf24l01",
+    "rf24",
+    "wireless",
+    "transceiver",
+    "raspi"
+  ],
+  "author": "Nathan Vander Wilt",
+  "license": "BSD-2-Clause",
+  "homepage": "https://github.com/natevw/node-nrf",
+  "bugs": {
+    "url": "https://github.com/natevw/node-nrf/issues"
+  },
+  "dependencies": {
+    "fifolock": "^1.0.0",
+    "pi-pins": "^1.0.0",
+    "pi-spi": "^1.0.0",
+    "queue-async": "~1.0.4"
+  }
+}
