@@ -9,6 +9,7 @@ var mongo = require('mongodb').MongoClient;
 var assert = require('assert');
 var moment = require('moment');
 var generator = require('knear');
+var nrf = require('nrf');
 
 
 var index = require('./routes/index');
@@ -19,6 +20,34 @@ var app = express();
 //MongoDB variables
 var url = 'mongodb://localhost:27017/TrainingDataDB';
 var collectionName = 'TakeOffExp14';
+
+//NRF variables
+//ce pin and irq need to be defined 
+//ce pin is 9 or 12 need to test with sensor
+var payload;
+var payload_arr;
+var cePin = 9;
+var irqPin = 8; //check this and spidev pin
+var radio = require('nrf').connect(spiDev, cePin, irqPin);
+
+//Setup NRF
+//These must also all be the same as the transmitter
+//check channel with transmitter
+radio.channel(0x4c).dataRate('1Mbps').crcBytes(2).autoRetransmit({count:15, delay:4000});
+
+//Start Radio
+//The pipe addresses have to be the same in the arduino transmitter
+radio.begin(function () {
+    var rx = radio.openPipe('rx', 0xF0F0F0F0E1),
+        tx = radio.openPipe('tx', 0xF0F0F0F0D2);
+
+    //read payload
+    payload = radio.readPayload();
+
+    //put payload into array read into array as ax,ay,az,gx,gy,gz
+    payload_arr = payload.split("");
+});
+
 
 //accelerometer variables
 var aX;
@@ -47,7 +76,7 @@ var k = 3; //TBD
 var machine = new generator.kNear(k);
 
 //get data from johnny-five
-var five = require("johnny-five");
+//var five = require("johnny-five"); dont need already declared above
 var board = new five.Board();
 
 board.on("ready", function() {
@@ -57,15 +86,24 @@ board.on("ready", function() {
     freq: 100 //100 milliseconds
   });
   imu.on("data", function(){
-    aX = this.accelerometer.x;
-    aY = this.accelerometer.y;
-    aZ = this.accelerometer.z;
+    //now we must set payload values to ax,ay,az values 
+    //from johnny five lib as there is no IMU
+    //CHECK:is this the right way of doing this?
+    this.accelerometer.x = payload[0]; //ax
+    aX = payload[0];
+    this.accelerometer.y = payload[1]; //ay
+    aY = payload[1];
+    this.accelerometer.z = payload[2]; //az
+    aZ = payload[2];
     aAcc = this.accelerometer.acceleration;
     aPitch = this.accelerometer.pitch;
     aRoll = this.accelerometer.roll;
-    gX = this.gyro.x;
-    gY = this.gyro.y;
-    gZ = this.gyro.z;
+    this.gyro.x = payload[3];
+    gX = payload[3];
+    this.gyro.y = payload[4];
+    gY = payload[4];
+    this.gyro.z = payload[5];
+    gZ = payload[5];
     gPitch = this.gyro.pitch;
     gRoll = this.gyro.roll;
     gYaw = this.gyro.yaw;
