@@ -4,8 +4,9 @@ var mongo = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 
-//MongoDB url
-var url = 'mongodb://localhost:27017/TrainingDataDB';
+//MongoDB urls
+var trainingUrl = 'mongodb://localhost:27017/TrainingDataDB';
+var resultsUrl = 'mongodb://localhost:27017/ResultsDataDB';
 
 var collectionName = 'TakeOffExp15';
 var resultsCollectionName = 'ClassificationResults';
@@ -18,7 +19,7 @@ router.get('/', function(req, res, next) {
 /* GET all sensor data from mongoDB collection */
 router.get('/get-data', function(req, res, next){
   var dataArray = [];
-  mongo.connect(url, function(err, db) {
+  mongo.connect(trainingUrl, function(err, db) {
     assert.equal(null, err);
     var cursor = db.collection(collectionName).find(); //get all data in the collection
     cursor.forEach(function(doc, err){
@@ -34,16 +35,16 @@ router.get('/get-data', function(req, res, next){
 /*GET classification result*/
 router.get('/get-result', function(req, res, next){
   var data = [];
-  mongo.connect(url, function(err, db) {
+  mongo.connect(resultsUrl, function(err, db) {
     assert.equal(null, err);
-    var cursor = db.collection(resultsCollectionName).find(ObjectId("58ba70a8352a60259441d969"));
+    var cursor = db.collection(resultsCollectionName).find().sort({_id:-1}).limit(1); //get the last inserted doc in collection
     cursor.forEach(function(doc, err){
       assert.equal(null, err);
       data.push(doc);
       console.log(doc);
     }, function() {
         db.close();
-        res.render('get-result', {title: resultsCollectionName, items: data});
+        res.render('get-result', {title: 'Classification Result', items: data});
     });
   });
 });

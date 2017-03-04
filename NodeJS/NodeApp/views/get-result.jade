@@ -2,5 +2,8 @@ extends layout
 
 block content
   h1= title
-      p #{Name}
-      p #{Date}
+    div
+      for item in items
+        p #{item.Name}
+        p #{item.Date}
+        p #{item.Result}
