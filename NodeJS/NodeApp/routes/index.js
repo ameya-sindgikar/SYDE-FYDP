@@ -2,11 +2,13 @@ var express = require('express');
 var router = express.Router();
 var mongo = require('mongodb').MongoClient;
 var assert = require('assert');
+var ObjectId = require('mongodb').ObjectID;
 
 //MongoDB url
 var url = 'mongodb://localhost:27017/TrainingDataDB';
 
-var collectionName = 'TakeOffExp16';
+var collectionName = 'TakeOffExp15';
+var resultsCollectionName = 'ClassificationResults';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -25,6 +27,23 @@ router.get('/get-data', function(req, res, next){
     }, function() {
         db.close();
         res.render('get-data', {title: collectionName + ' Data Dump', items: dataArray});
+    });
+  });
+});
+
+/*GET classification result*/
+router.get('/get-result', function(req, res, next){
+  var data = [];
+  mongo.connect(url, function(err, db) {
+    assert.equal(null, err);
+    var cursor = db.collection(resultsCollectionName).find(ObjectId("58ba70a8352a60259441d969"));
+    cursor.forEach(function(doc, err){
+      assert.equal(null, err);
+      data.push(doc);
+      console.log(doc);
+    }, function() {
+        db.close();
+        res.render('get-result', {title: resultsCollectionName, items: data});
     });
   });
 });
