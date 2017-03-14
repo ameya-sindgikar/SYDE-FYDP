@@ -17,12 +17,8 @@ var users = require('./routes/users');
 var app = express();
 
 //MongoDB variables
-<<<<<<< HEAD
-var url = 'mongodb://localhost:27017/accelDataDB';
-var collectionName = 'FailureTwoCollection';
-=======
 var url = 'mongodb://localhost:27017/TrainingDataDB';
->>>>>>> master
+var collectionName = 'TakeOffExp16';
 
 //accelerometer variables
 var aX;

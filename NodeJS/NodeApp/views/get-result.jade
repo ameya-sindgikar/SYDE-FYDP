@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+    div
+      for item in items
+        p #{item.Name}
+        p #{item.Date}
+        p #{item.Result}
