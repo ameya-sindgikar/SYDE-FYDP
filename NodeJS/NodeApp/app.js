@@ -18,7 +18,7 @@ var app = express();
 
 //MongoDB variables
 var url = 'mongodb://localhost:27017/TrainingDataDB';
-var collectionName = 'TakeOffExp14';
+var collectionName = 'TakeOffNov4';
 
 //accelerometer variables
 var aX;
@@ -69,6 +69,7 @@ board.on("ready", function() {
     gPitch = this.gyro.pitch;
     gRoll = this.gyro.roll;
     gYaw = this.gyro.yaw;
+    altMeters = 333; //Temp since altimeter broken
 
     console.log("MPU6050");
     console.log("aX     ",aX);
@@ -83,9 +84,14 @@ board.on("ready", function() {
     console.log("gPitch ",gPitch);
     console.log("gRoll  ",gRoll);
     console.log("gYaw   ",gYaw);
+    console.log("alt    ",altMeters);
+    console.log("_______________________________");
+
+    //storeData();
   });
 
   //Altimeter
+  /*
   var altimeter = new five.Altimeter({
     controller: "MPL3115A2",
     freq: 100,
@@ -100,8 +106,9 @@ board.on("ready", function() {
     console.log("Altitude in meters: ", altMeters);
     console.log("_______________________________");
 
-    storeData();
+    //storeData();
   });
+  */
 
 });
 
