@@ -8,7 +8,7 @@ var ObjectId = require('mongodb').ObjectID;
 var trainingUrl = 'mongodb://localhost:27017/TrainingDataDB';
 var resultsUrl = 'mongodb://localhost:27017/ResultsDataDB';
 
-var collectionName = 'TakeOffExp30';
+var collectionName = 'TakeOffNov42';
 var resultsCollectionName = 'ClassificationResults';
 
 /* GET home page. */
