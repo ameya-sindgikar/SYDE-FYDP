@@ -3,6 +3,7 @@ import os
 import fnmatch
 import json
 import numpy as np
+import matplotlib.pyplot as plt
 
 #Connect to mongoDB and get data from collection
 #client = pymongo.MongoClient()
@@ -11,8 +12,8 @@ import numpy as np
 currentExpData = []
 extractedExpData = []
 
-directory = 'Data/Expert'
-
+directory = 'Expert'
+plt.figure()
 for filename in os.listdir(directory):
     if filename.endswith(".json") and fnmatch.fnmatch(filename, 'TakeOffExp*'):
 
@@ -105,17 +106,31 @@ for filename in os.listdir(directory):
                                             currTrialDerMean,
                                             currTrialDerVar,
                                             currTrialDerMax), axis=0)
-        print(currTrialAllExtData.shape)
-        print(currTrialAllExtData)
+        #print(currTrialAllExtData.shape)
+        #print(currTrialAllExtData)
         #print "Concatenated---------------------------------------------------------------------------"
         #print currTrialAllExtData
         #print "Appended-------------------------------------------------------------------------------"
         #print currTrialAllExtData.shape
         extractedExpData.append(currTrialAllExtData)
+
+        t = np.arange(0, len(currTrialAllExtData), 1)
+        plt.plot(t, currTrialAllExtData, color = np.random.rand(3,1))
+
         #print extractedExpData
         #print "END-------------------------------------------------------------------------------------"
+plt.show()
 expertDataArray = np.array(currentExpData)
 expertExtractedDataArray = np.array(extractedExpData)
 print (expertExtractedDataArray.shape)
 #print expertDataArray.shape
 #print discExpDataArray
+
+from sklearn.preprocessing import StandardScaler
+X_std = StandardScaler().fit_transform(expertExtractedDataArray)
+
+#find covariance matrix
+import numpy as np
+mean_vec = np.mean(X_std, axis=0)
+cov_mat = (X_std - mean_vec).T.dot((X_std - mean_vec)) / (X_std.shape[0]-1)
+print('Covariance matrix \n%s' %cov_mat)
