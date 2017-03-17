@@ -18,7 +18,7 @@ var app = express();
 
 //MongoDB variables
 var url = 'mongodb://localhost:27017/TrainingDataDB';
-var collectionName = 'TakeOffNov42';
+var collectionName = 'TakeOffNov61';
 
 //accelerometer variables
 var aX;
@@ -87,7 +87,7 @@ board.on("ready", function() {
     console.log("alt    ",altMeters);
     console.log("_______________________________");
 
-    //storeData();
+    storeData();
   });
 
   //Altimeter
